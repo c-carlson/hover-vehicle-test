@@ -19,6 +19,7 @@ public class CarPhysics : MonoBehaviour {
 	Vector3[,] courseTriangles;
 	Vector3[,] courseTrianglesGlobal;
 	public GameObject course;
+	Transform checkpointList;
 
 	void Start () {
 		velocity = Vector3.zero;
@@ -30,12 +31,24 @@ public class CarPhysics : MonoBehaviour {
 		sensors[1] = new Vector3(dim, -dim, -dim);
 		sensors[2] = new Vector3(-dim, -dim, dim);
 		sensors[3] = new Vector3(-dim, -dim, -dim);
+		Transform courseTrans = GameObject.Find ("course").transform;
+		foreach (Transform child in courseTrans) {
+			if (child.gameObject.name == "checkpoint list") {
+				checkpointList = child;
+			}
+		}
 	}
 
 	void OnTriggerEnter(Collider col) {
 
 		if (col.gameObject.name == "checkpoint") {
-			Debug.Log ("Hit checkpoint");
+			int children = checkpointList.childCount;
+			for (int i = 0; i < children; i++) {
+				Transform child = checkpointList.GetChild(i);
+				if (child == col.gameObject.transform) {
+					Debug.Log ("Hit checkpoint #" + i);
+				}
+			}
 		}
 	}
 
