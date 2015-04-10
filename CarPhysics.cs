@@ -32,6 +32,13 @@ public class CarPhysics : MonoBehaviour {
 		sensors[3] = new Vector3(-dim, -dim, -dim);
 	}
 
+	void OnTriggerEnter(Collider col) {
+
+		if (col.gameObject.name == "checkpoint") {
+			Debug.Log ("Hit checkpoint");
+		}
+	}
+
 	Vector3 getUserForce () {
 		Vector3 force = Vector3.zero;
 		if (Input.GetKey ("w")) {
@@ -118,6 +125,6 @@ public class CarPhysics : MonoBehaviour {
 		float start = Time.realtimeSinceStartup;
 		applyHoverForce ();
 		float stop = Time.realtimeSinceStartup;
-		Debug.Log ("AHF execution time: " + (stop - start).ToString("0.00000000"));
+		//Debug.Log ("AHF execution time: " + (stop - start).ToString("0.00000000"));
 	}
 }
