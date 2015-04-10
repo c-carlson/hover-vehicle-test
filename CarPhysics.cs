@@ -19,7 +19,9 @@ public class CarPhysics : MonoBehaviour {
 	Vector3[,] courseTriangles;
 	Vector3[,] courseTrianglesGlobal;
 	public GameObject course;
-	Transform checkpointList;
+	Transform[] checkpoints;
+	int lastCheckpoint;
+	int lap;
 
 	void Start () {
 		velocity = Vector3.zero;
@@ -31,10 +33,17 @@ public class CarPhysics : MonoBehaviour {
 		sensors[1] = new Vector3(dim, -dim, -dim);
 		sensors[2] = new Vector3(-dim, -dim, dim);
 		sensors[3] = new Vector3(-dim, -dim, -dim);
+		lap = 1;
+		lastCheckpoint = -1;
 		Transform courseTrans = GameObject.Find ("course").transform;
 		foreach (Transform child in courseTrans) {
 			if (child.gameObject.name == "checkpoint list") {
-				checkpointList = child;
+				Transform checkpointParent = child;
+				int children = checkpointParent.childCount;
+				checkpoints = new Transform[children];
+				for (int i = 0; i < children; i++) {
+					checkpoints[i] = checkpointParent.GetChild(i);
+				}
 			}
 		}
 	}
@@ -42,11 +51,15 @@ public class CarPhysics : MonoBehaviour {
 	void OnTriggerEnter(Collider col) {
 
 		if (col.gameObject.name == "checkpoint") {
-			int children = checkpointList.childCount;
-			for (int i = 0; i < children; i++) {
-				Transform child = checkpointList.GetChild(i);
-				if (child == col.gameObject.transform) {
-					Debug.Log ("Hit checkpoint #" + i);
+			for (int i = 0; i < checkpoints.Length; i++) {
+				if (checkpoints[i] == col.gameObject.transform) {
+					Debug.Log ("Hit checkpoint #" + (i + 1));
+					if (lastCheckpoint == i - 1 || (lastCheckpoint == checkpoints.Length - 1 && i == 0)) {
+						lastCheckpoint = i;
+					}
+					if (i == checkpoints.Length - 1) {
+						lap++;
+					}
 				}
 			}
 		}
