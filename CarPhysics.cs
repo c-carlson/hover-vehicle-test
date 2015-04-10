@@ -34,6 +34,7 @@ public class CarPhysics : MonoBehaviour {
 		sensors[2] = new Vector3(-dim, -dim, dim);
 		sensors[3] = new Vector3(-dim, -dim, -dim);
 		lap = 1;
+		Debug.Log ("Lap " + lap);
 		lastCheckpoint = -1;
 		Transform courseTrans = GameObject.Find ("course").transform;
 		foreach (Transform child in courseTrans) {
@@ -53,12 +54,13 @@ public class CarPhysics : MonoBehaviour {
 		if (col.gameObject.name == "checkpoint") {
 			for (int i = 0; i < checkpoints.Length; i++) {
 				if (checkpoints[i] == col.gameObject.transform) {
-					Debug.Log ("Hit checkpoint #" + (i + 1));
+					Debug.Log ("Hit checkpoint " + (i + 1) + " of " + checkpoints.Length);
 					if (lastCheckpoint == i - 1 || (lastCheckpoint == checkpoints.Length - 1 && i == 0)) {
 						lastCheckpoint = i;
 					}
 					if (i == checkpoints.Length - 1) {
 						lap++;
+						Debug.Log ("Lap " + lap);
 					}
 				}
 			}
